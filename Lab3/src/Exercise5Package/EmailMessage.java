@@ -1,11 +1,20 @@
 package Exercise5Package;
 
 import java.util.LinkedList;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 
 public class EmailMessage {
-    private String from; //required (must be e-mail)
-    private LinkedList<String> to; //required at least one (must be e-mail)
+    public String from; //required (must be e-mail)
+    public LinkedList<String> to; //required at least one (must be e-mail)
     private String subject; //optional
     private String content; //optional
     private String mimeType;  // optional
@@ -13,13 +22,21 @@ public class EmailMessage {
     private LinkedList<String> bcc; // optional
 
 
-    protected EmailMessage(  String from,
-                          LinkedList<String> to,
-                          String subject,
-                          String content,
-                          String mimeType,
-                          LinkedList<String> cc,
-                          LinkedList<String> bcc){}
+    protected EmailMessage(  String from_,
+                          LinkedList<String> to_,
+                          String subject_,
+                          String content_,
+                          String mimeType_,
+                          LinkedList<String> cc_,
+                          LinkedList<String> bcc_){
+        from = from_;
+        to = to_;
+        subject = subject_;
+        content = content_;
+        mimeType = mimeType_;
+        cc = cc_;
+        bcc = bcc_;
+    }
 
     static public class Builder{
         String from, subject, content, mimeType = "";
@@ -72,8 +89,38 @@ public class EmailMessage {
         return new EmailMessage.Builder();
     }
 
-    public void Sent()
+    public void Send(String password)
     {
 
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(props,
+                new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(from, password);
+                    }
+                });
+
+        try {
+
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(from));
+            message.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(to.getFirst()));
+            message.setSubject("Testing Subject");
+            message.setText("MAIL MESSAGE"
+                    + "\n\n SPAM");
+
+            Transport.send(message);
+
+            System.out.println("Done");
+
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
