@@ -8,9 +8,10 @@ import java.util.LinkedList;
  * Created by kubas on 20.10.2017.
  */
 public class EmployList implements Comparator<Employ> {
-    public LinkedList<EmployList> list = new LinkedList<EmployList>();
 
-    public EmployList getElement(int index){
+    public LinkedList<Employ> list = new LinkedList<Employ>();
+
+    public Employ getElement(int index){
         if(index < 0 || index  > list.size())
         {
             return null;
@@ -21,12 +22,12 @@ public class EmployList implements Comparator<Employ> {
         }
     }
 
-    public void AddElement(EmployList employ)
+    public void AddElement(Employ employ)
     {
         list.add(employ);
     }
 
-    public boolean RemoveElement(EmployList employ)
+    public boolean RemoveElement(Employ employ)
     {
         if(list.contains(employ))
         {
@@ -41,15 +42,15 @@ public class EmployList implements Comparator<Employ> {
 
 
     @Override
-    public int compare(Employ employ, Employ t1) {
-
+    public int compare(Employ employ, Employ t1)
+    {
         if(employ.reveneu > t1.reveneu)
         {
             return 1;
         }
         else
         {
-            return 2;
+            return 0;
         }
     }
 }
