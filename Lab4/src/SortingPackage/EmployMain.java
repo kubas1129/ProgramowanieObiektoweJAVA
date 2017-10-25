@@ -1,5 +1,6 @@
 package SortingPackage;
 
+import java.util.*;
 
 /**
  * Created by kubas on 20.10.2017.
@@ -7,12 +8,16 @@ package SortingPackage;
 public class EmployMain {
     public static void main(String[] arg)
     {
-        EmployList list = new EmployList();
-        list.AddElement(new Employ(12));
-        list.AddElement(new Employ(90));
-        list.AddElement(new Employ(199));
+        EmployList employes = new EmployList();
+        employes.AddElement(new Employ(12,"Lucy"));
+        employes.AddElement(new Employ(90,"Mark"));
+        employes.AddElement(new Employ(8,"Jasmine"));
 
-        System.out.println(list.getElement(0));
+        employes.ShowEmployes();
+        System.out.println("");
+        Collections.sort(employes.list);
+        System.out.println("");
+        employes.ShowEmployes();
     }
 
 }

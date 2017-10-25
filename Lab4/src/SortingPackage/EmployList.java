@@ -1,15 +1,17 @@
 package SortingPackage;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.List;
 
 
 /**
  * Created by kubas on 20.10.2017.
  */
-public class EmployList implements Comparator<Employ> {
+public class EmployList{
 
-    public LinkedList<Employ> list = new LinkedList<Employ>();
+    public List<Employ> list = new ArrayList<Employ>();
 
     public Employ getElement(int index){
         if(index < 0 || index  > list.size())
@@ -40,17 +42,13 @@ public class EmployList implements Comparator<Employ> {
         }
     }
 
-
-    @Override
-    public int compare(Employ employ, Employ t1)
+    public void ShowEmployes()
     {
-        if(employ.reveneu > t1.reveneu)
+        for(Employ em : list)
         {
-            return 1;
-        }
-        else
-        {
-            return 0;
+            System.out.println(em.name + " : " + em.reveneu);
         }
     }
+
+
 }
