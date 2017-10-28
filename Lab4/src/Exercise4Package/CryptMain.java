@@ -25,13 +25,13 @@ public class CryptMain {
                 if (method == 1 || method == 2)
                 {
                     if(option == 1 && method == 1)
-                        Cryptographer.cryptfile(arg[1], arg[2], new ROT11());
+                        Cryptographer.cryptfile(arg[0], arg[1], new ROT11());
                     if(option == 1 && method == 2)
-                        Cryptographer.decryptfile(arg[1], arg[2], new Polibius());
+                        Cryptographer.decryptfile(arg[0], arg[1], new Polibius());
                     if(option == 2 && method == 1)
-                        Cryptographer.cryptfile(arg[1],arg[2], new ROT11());
+                        Cryptographer.cryptfile(arg[0],arg[1], new ROT11());
                     if(option == 2 && method == 2)
-                        Cryptographer.decryptfile(arg[1], arg[2], new Polibius());
+                        Cryptographer.decryptfile(arg[0], arg[1], new Polibius());
                 }
                 else
                     exit = true;
