@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import io.indico.Indico;
 import io.indico.api.custom.CollectionData;
 import io.indico.api.custom.IndicoCollection;
@@ -13,8 +14,6 @@ import io.indico.api.results.BatchIndicoResult;
 import io.indico.api.utils.IndicoException;
 import io.indico.Indico;
 import org.apache.commons.io.FileUtils;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
-
 import javax.imageio.ImageIO;
 
 
@@ -28,7 +27,7 @@ public class ImageSort {
             Indico indico = new Indico("2b1df4e065316a10e6d6d07dc553cc89");
 
             //String pathToFolder = args[0];
-            String pathToFolder = "F:\\AGH\\InfaSemestr3\\PO\\Projects\\Lab5\\src\\ImageSortPackage\\foto";
+            String pathToFolder = "E:\\AGH\\SemestrIII\\PO_Repository\\Lab5\\src\\ImageSortPackage\\foto";
             String[] paths = GetPathsName(pathToFolder);
 
             IndicoResult[] results = new IndicoResult[paths.length];
@@ -60,17 +59,26 @@ public class ImageSort {
                 Path path = Paths.get(pathToFolder + "\\" + entry.getValue());
                 if(Files.notExists(path))
                 {
-                    boolean success = (new File(pathToFolder + "\\" + entry.getValue())).mkdir();
+                    boolean success = (new File(pathToFolder + "\\SortedImages\\" + entry.getValue() + "\\")).mkdirs();
                     if(success)
                     {
                         //Copy image to folder
-                        File source = new File(entry.getKey());
-                        File dest = new File(pathToFolder + "\\" + entry.getValue());
-                        try{
-                            Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                        } catch (IOException e) {e.printStackTrace();}
 
-                        //System.out.println("Folder created!");
+                        File source = new File(entry.getKey());
+
+                        String pattern = "(\\w+.jpg)";
+                        Pattern r = Pattern.compile(pattern);
+                        Matcher m = r.matcher(entry.getKey());
+                        if (m.find( ))
+                        {
+                            File dest = new File(pathToFolder + "\\SortedImages\\" + entry.getValue() + "\\" + m.group(0));
+                            System.out.println(entry.getKey());
+                            try {
+                                Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
 
                     }
                     else
@@ -80,13 +88,25 @@ public class ImageSort {
                 }
                 else
                 {
-                    //System.out.println("Folder existed!");
                     //Copy image to folder
+
                     File source = new File(entry.getKey());
-                    File dest = new File(pathToFolder + "\\" + entry.getValue());
-                    try{
-                        Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                    } catch (IOException e) {e.printStackTrace();}
+
+                    String pattern = "(\\w+.jpg)";
+                    Pattern r = Pattern.compile(pattern);
+                    Matcher m = r.matcher(entry.getKey());
+                    if (m.find( ))
+                    {
+
+                        File dest = new File(pathToFolder + "\\SortedImages\\" + entry.getValue() + "\\" + m.group(0));
+                        System.out.println(entry.getKey());
+                        try {
+                            Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
                 }
             }
 
@@ -99,24 +119,19 @@ public class ImageSort {
     //Get paths
     private static String[] GetPathsName(String dir) throws NullPointerException
     {
-        try
-        {
-            File folder = new File(dir);
-            File[] listOfFiles = folder.listFiles();
-            if(listOfFiles == null) throw new NullPointerException("Folder doesn't exists!"); //exception handle
-            String[] paths = new String[listOfFiles.length];
 
-            for (int i = 0; i < listOfFiles.length; i++) {
-                if (listOfFiles[i].isFile()) {
-                    paths[i] =  dir + "\\" + listOfFiles[i].getName();
-                }
+        File folder = new File(dir);
+        File[] listOfFiles = folder.listFiles();
+        if(listOfFiles == null) throw new NullPointerException("Folder doesn't exists!"); //exception handle
+        String[] paths = new String[listOfFiles.length];
+
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+                paths[i] =  dir + "\\" + listOfFiles[i].getName();
             }
-
-            return paths;
         }
-        finally {
 
-        }
+        return paths;
     }
 
 }
