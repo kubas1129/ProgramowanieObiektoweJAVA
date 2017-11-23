@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="ImageSortPackage.sortWindowController">
+  <children>
+    <BorderPane layoutX="14.0" layoutY="14.0" prefHeight="372.0" prefWidth="572.0">
+      <bottom>
+        <HBox alignment="TOP_RIGHT" prefHeight="50.0" prefWidth="500.0" spacing="10.0">
+          <children>
+            <Label text="Path to image folder:" />
+            <TextField fx:id="pathField" focusTraversable="false" prefWidth="250.0" promptText="path..." />
+            <Button mnemonicParsing="false" onAction="#StartIndico" prefHeight="10.0" text="Start Indico" />
+            <Button mnemonicParsing="false" onAction="#Exit" prefHeight="10.0" text="Exit" textAlignment="LEFT" textOverrun="ELLIPSIS" />
+          </children>
+          <padding>
+            <Insets bottom="15.0" top="15.0" />
+          </padding>
+        </HBox>
+      </bottom>
+      <center>
+        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="TOP_LEFT">
+          <children>
+            <ImageView fx:id="imageView" fitHeight="245.25" fitWidth="327.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="NEVER">
+              <VBox.margin>
+                <Insets fx:id="x1" />
+              </VBox.margin>
+            </ImageView>
+            <Label fx:id="predictionLabel" prefHeight="32.0" text="Prediction: none" />
+          </children>
+        </VBox>
+      </center>
+      <left>
+        <TreeView fx:id="treeView" prefHeight="322.0" prefWidth="112.0" BorderPane.margin="$x1" />
+      </left>
+    </BorderPane>
+  </children>
+</AnchorPane>
