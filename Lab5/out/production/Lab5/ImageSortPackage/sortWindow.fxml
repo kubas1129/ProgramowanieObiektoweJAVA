@@ -32,7 +32,11 @@
                 <Insets fx:id="x1" />
               </VBox.margin>
             </ImageView>
-            <Label fx:id="predictionLabel" prefHeight="32.0" text="Prediction: none" />
+            <Label fx:id="predictionLabel" prefHeight="32.0" text="Prediction: none">
+              <VBox.margin>
+                <Insets top="20.0" />
+              </VBox.margin>
+            </Label>
           </children>
         </VBox>
       </center>
