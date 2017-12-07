@@ -62,21 +62,46 @@ public class dbMenuController {
     {
         if(DB.connected)
         {
-            ArrayList<String> ls = new ArrayList<String>(DB.listFound(searchingName.getText()));
-
-            for(Object e : ls.toArray())
+            if(!searchingName.getText().equals(""))
             {
-                if(e instanceof String)
+                ArrayList<dataBaseStruct> ls = new ArrayList<dataBaseStruct>(DB.listFound(searchingName.getText()));
+
+                listView.getItems().clear();
+
+                for(Object e : ls.toArray())
                 {
-                    listView.getItems().add(new Label((String)e));
+                    if(e instanceof dataBaseStruct)
+                    {
+                        dataBaseStruct dbs = (dataBaseStruct)e;
+                        listView.getItems().add(new Label(dbs.title + "," + dbs.author + "," + String.valueOf(dbs.year)));
+                    }
                 }
             }
+            else
+            {
+                System.out.println("ww");
+                ArrayList<dataBaseStruct> ls = new ArrayList<dataBaseStruct>(DB.listNames());
+
+                listView.getItems().clear();
+
+
+                for(Object e : ls.toArray())
+                {
+                    if(e instanceof dataBaseStruct)
+                    {
+                        dataBaseStruct dbs = (dataBaseStruct)e;
+                        listView.getItems().add(new Label(dbs.title + "," + dbs.author + "," + String.valueOf(dbs.year)));
+                    }
+                }
+            }
+
         }
     }
 
 
     public void initialize()
     {
+        RefreshStatus();
         Timeline checkingStatus = new Timeline(new KeyFrame(Duration.seconds(2), new EventHandler<ActionEvent>() {
 
             @Override

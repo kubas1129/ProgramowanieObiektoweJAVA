@@ -57,15 +57,16 @@ public class DB {
     }
 
 
-    public static void listNames() {
+    public static ArrayList<dataBaseStruct> listNames()
+    {
+        ArrayList<dataBaseStruct> ls = new ArrayList<dataBaseStruct>();
         try {
             connect();
             stat = conn.createStatement();
-
-            res = stat.executeQuery("SELECT title FROM books");
+            res = stat.executeQuery("SELECT * FROM books");
 
             while (res.next()) {
-                System.out.println(res.getString(1));
+                ls.add(new dataBaseStruct(res.getString(2),res.getString(3),Integer.parseInt(res.getString(4))));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -88,12 +89,14 @@ public class DB {
                 stat = null;
             }
         }
+        return ls;
     }
 
 
-    public static ArrayList<String> listFound(String name)
+
+    public static ArrayList<dataBaseStruct> listFound(String name)
     {
-        ArrayList<String> ls = new ArrayList<>();
+        ArrayList<dataBaseStruct> ls = new ArrayList<dataBaseStruct>();
         try
         {
             connect();
@@ -103,7 +106,7 @@ public class DB {
 
             while(res.next())
             {
-                ls.add(res.getString(2));
+                ls.add(new dataBaseStruct(res.getString(2),res.getString(3),Integer.parseInt(res.getString(4))));
             }
         } catch (SQLException ex) {ex.printStackTrace();}
 
