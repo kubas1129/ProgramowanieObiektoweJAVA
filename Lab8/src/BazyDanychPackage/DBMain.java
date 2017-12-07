@@ -1,7 +1,12 @@
 package BazyDanychPackage;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 /**
  * Created by kubas on 01.12.2017.
@@ -17,9 +22,16 @@ public class DBMain extends Application {
     @Override
     public void start(Stage stage) throws Exception
     {
-        DB dBase = new DB("japalka","b0MSik9rM8YJW9bB");
-        dBase.listNames();
-        System.out.println("dzial");
+        try
+        {
+            Parent dbInStage = FXMLLoader.load(this.getClass().getResource("dbApp.fxml"));
+            Scene dbInScene = new Scene(dbInStage);
+
+            stage.setTitle("Logowanie");
+            stage.setScene(dbInScene);
+            stage.show();
+        } catch (IOException e) {e.printStackTrace();}
+
 
 
     }

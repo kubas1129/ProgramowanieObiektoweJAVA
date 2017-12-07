@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="mainStage" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="BazyDanychPackage.dbAppController">
+  <children>
+    <VBox alignment="CENTER" layoutX="219.0" layoutY="82.0" prefHeight="208.0" prefWidth="163.0" spacing="6.0">
+      <children>
+        <Label prefHeight="38.0" prefWidth="163.0" text="Logowanie do bazy danych AGH" textAlignment="CENTER" underline="false" wrapText="true">
+          <font>
+            <Font size="12.0" />
+          </font>
+        </Label>
+        <HBox prefHeight="22.0" prefWidth="163.0">
+          <children>
+            <Label prefWidth="40.0" text="User" />
+            <TextField fx:id="userField" prefWidth="-1.0" text="" />
+          </children>
+        </HBox>
+        <HBox prefHeight="22.0" prefWidth="163.0">
+          <children>
+            <Label prefWidth="40.0" text="Pass" />
+            <PasswordField fx:id="passField" prefWidth="-1.0" text="" />
+          </children>
+        </HBox>
+        <Button alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#ChangeScene" text="Zaloguj" />
+      </children>
+    </VBox>
+  </children>
+</AnchorPane>
