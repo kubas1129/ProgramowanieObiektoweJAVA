@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="BazaPracownikowPackage.bazaMainPageController">
+  <children>
+    <BorderPane layoutX="14.0" layoutY="14.0" prefHeight="372.0" prefWidth="572.0">
+      <left>
+        <ListView fx:id="listView" prefHeight="372.0" prefWidth="270.0" />
+      </left>
+      <right>
+        <VBox alignment="CENTER" prefHeight="372.0" prefWidth="270.0">
+          <children>
+            <HBox alignment="CENTER" prefHeight="84.0" prefWidth="270.0">
+              <children>
+                <Label prefWidth="80.0" text="First name:" />
+                <TextField fx:id="fname" prefWidth="200.0" />
+              </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="84.0" prefWidth="270.0">
+              <children>
+                <Label prefWidth="80.0" text="Last name:" />
+                <TextField fx:id="sname" prefWidth="200.0" />
+              </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="84.0" prefWidth="270.0">
+              <children>
+                <Label maxWidth="100.0" prefWidth="80.0" text="Pesel:" />
+                <TextField fx:id="pesel" prefWidth="200.0" />
+              </children>
+            </HBox>
+            <Button contentDisplay="CENTER" mnemonicParsing="false" onAction="#AddToBase" text="Dodaj" />
+          </children>
+        </VBox>
+      </right>
+    </BorderPane>
+  </children>
+</AnchorPane>
