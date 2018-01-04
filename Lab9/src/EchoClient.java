@@ -34,7 +34,7 @@ public class EchoClient {
         System.out.println("Type a message: ");
         while ((userInput = stdIn.readLine()) != null) {
             out.println(userInput); //pisanie do gniazda
-            System.out.println("echo: " + in.readLine()); //czytanie z gniazda
+            System.out.println("Server: " + in.readLine()); //czytanie z gniazda
         }
 
         out.close();

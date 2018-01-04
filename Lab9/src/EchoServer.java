@@ -2,92 +2,75 @@ import java.io.*;
 import java.net.*;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-enum NETSTATE{
-    WAITING_NONLOGIN,
-    WAITING_LOGIN
-}
-
-class UserInfo{
-    public int id_key;
-    public String login;
-    UserInfo(int key, String log)
-    {
-        id_key = key;
-        login = log;
-    }
-}
-
-
-
 public class EchoServer {
+
+    static LinkedList<UserInfo> userinfo = new LinkedList<UserInfo>();
+
     public static void main(String[] args) throws IOException {
+        ServerSocket serverSocket = new ServerSocket(6666);
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        while (true){
+            final Socket socket = serverSocket.accept();
+            Runnable connection = new Runnable() {
+                @Override
+                public void run() {
 
-        NETSTATE netstate = NETSTATE.WAITING_NONLOGIN;
-        LinkedList<UserInfo> userinfo = new LinkedList<UserInfo>();
+                    try {
+                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                        String line = bufferedReader.readLine();
+                        while (!line.equals("exit")){
+                            bufferedWriter.write(ExecuteCommand(line,userinfo));
+                            bufferedWriter.write("\n");
+                            bufferedWriter.flush();
+                            line = bufferedReader.readLine();
+                        }
+                        socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
-        ServerSocket serverSocket = null;
-        try {
-            serverSocket = new ServerSocket(6666);
-        } catch (IOException e) {
-            System.out.println("Could not listen on port: 6666");
-            System.exit(-1);
+                }
+            };
+            executorService.submit(connection);
         }
-
-        Socket clientSocket = null;
-        try {
-            clientSocket = serverSocket.accept();
-        } catch (IOException e) {
-            System.out.println("Accept failed: 6666");
-            System.exit(-1);
-        }
-        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(
-                        clientSocket.getInputStream()));
-        String inputLine;
-
-        while ((inputLine = in.readLine()) != null) {
-            out.println(ExecuteCommand(inputLine,userinfo));
-        }
-        out.close();
-        in.close();
-        clientSocket.close();
-        serverSocket.close();
     }
 
-    public static String ExecuteCommand(String command, LinkedList<UserInfo> UI)
+    public static String ExecuteCommand(String command, LinkedList<UserInfo> userinfo)
     {
         String mainCommand="";
+        String parameters = "";
 
-        int index=0;
-        for(char c: command.toCharArray())
+        Pattern pt = Pattern.compile("(.*) (.*)");
+        Matcher mt = pt.matcher(command);
+        if(mt.find())
         {
-            if(c != ' ')
-            {
-                mainCommand += c;
-                index++;
-            }
-            else
-            {
-                index++;
-                break;
-            }
-
+            mainCommand = mt.group(1);
+            parameters = mt.group(2);
         }
 
-        mainCommand.toUpperCase();
+        mainCommand = mainCommand.toUpperCase();
+        System.out.println(mainCommand);
 
         switch (mainCommand)
         {
             case "LOGIN":
-                return CommandLOGIN(command.substring(index, command.length()),UI);
-
+                return CommandLOGIN(parameters,userinfo);
+            case "LOGOUT":
+                return CommandLOGOUT(parameters,userinfo);
+            case "LS":
+                if(parameters.equals("USERS"))
+                    return CommandWHO(userinfo);
+                else
+                    return CommandLS(parameters,userinfo);
+            default:
+                return "Nieznana komenda!";
         }
-
-        return mainCommand;
     }
 
     public static String CommandLOGIN(String command, LinkedList<UserInfo> UI)
@@ -96,7 +79,7 @@ public class EchoServer {
         {
             String login="";
             String pass="";
-            System.out.println(command);
+            //System.out.println(command);
             Pattern pattern = Pattern.compile("(.*);(.*)");
             Matcher matcher = pattern.matcher(command);
             if(matcher.find())
@@ -106,7 +89,7 @@ public class EchoServer {
             }
             else
             {
-                return "NULL";
+                return "Nieznane parametry!";
             }
 
             try
@@ -114,11 +97,15 @@ public class EchoServer {
                 BufferedReader br = new BufferedReader(new FileReader(System.getProperty("user.dir") + "\\src\\dict.txt"));
                 String line;
 
-
-
                 while ((line = br.readLine()) != null) {
                     if(line.equals(login + "/" + pass))
                     {
+                        for(UserInfo ui : UI)
+                        {
+                            if(ui.login.equals(login))
+                                return "Uzytkownik juz zalogowany";
+                        }
+
                         Random r = new Random();
                         int id = r.nextInt((99999-10000)+1)+10000;
                         UI.add(new UserInfo(id,login));
@@ -127,9 +114,76 @@ public class EchoServer {
                 }
             } catch(IOException e) {e.printStackTrace();}
 
-            return "User not found";
+            return "Uzytkownik nie znaleziony!";
         }
         else
             return "No command property found!";
     }
+
+    public static String CommandLOGOUT(String command, LinkedList<UserInfo> UI)
+    {
+        if(command.length() > 0)
+        {
+            String id;
+            Pattern pattern = Pattern.compile("([0-9]*)");
+            Matcher matcher = pattern.matcher(command);
+            if(matcher.find())
+            {
+                id = matcher.group(1);
+            }
+            else
+                return "Nieznane parametry!";
+
+            for(UserInfo ui : UI)
+            {
+                if(ui.id_key == Integer.valueOf(id))
+                {
+                    UserInfo tmp = new UserInfo(ui.id_key,ui.login);
+                    UI.remove(tmp);
+                    return "Wylogowano.";
+                }
+            }
+
+            return "Nie znaleziono ID!";
+        }
+        else
+        {
+            return "No command property found!";
+        }
+    }
+
+    public static String CommandWHO(LinkedList<UserInfo> UI)
+    {
+        String out="";
+        for(UserInfo ui:UI)
+        {
+            out += ui.login + ",";
+        }
+        if(out.length() == 0)
+            return "Brak zalogowanych uzytkowników!";
+        return out;
+    }
+
+    public static String CommandLS(String command, LinkedList<UserInfo> UI)
+    {
+        if(command.length() == 0)
+            return "Brak parametrów!";
+        for(UserInfo ui:UI)
+        {
+            if(ui.id_key == Integer.valueOf(command))
+            {
+                File dir = new File(System.getProperty("user.dir"));
+                File[] files = dir.listFiles();
+                String out="";
+                for(File fl:files)
+                {
+                    if(fl.isFile())
+                        out+=fl.getName()+";";
+                }
+                return out;
+            }
+        }
+        return "Nieznane ID";
+    }
+
 }
