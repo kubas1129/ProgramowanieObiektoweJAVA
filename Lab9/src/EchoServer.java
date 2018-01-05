@@ -1,5 +1,7 @@
 import java.io.*;
 import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -63,6 +65,8 @@ public class EchoServer {
                 return CommandLOGIN(parameters,userinfo);
             case "LOGOUT":
                 return CommandLOGOUT(parameters,userinfo);
+            case "GET":
+                return CommandGET(parameters,userinfo);
             case "LS":
                 if(parameters.equals("USERS"))
                     return CommandWHO(userinfo);
@@ -186,4 +190,59 @@ public class EchoServer {
         return "Nieznane ID";
     }
 
+    public static String CommandGET(String command, LinkedList<UserInfo> UI)
+    {
+        if(command.length() > 0)
+        {
+            Pattern pattern = Pattern.compile("(.*);(.*)");
+            Matcher matcher = pattern.matcher(command);
+            if(matcher.find())
+            {
+                for(UserInfo ui:UI)
+                {
+                    if(ui.id_key == Integer.parseInt(matcher.group(1)))
+                    {
+                        String source = System.getProperty("user.dir")+"/"+matcher.group(2);
+                        File file = new File(source);
+                        if(file.exists())
+                        {
+                            String content="";
+
+                            FileReader fr = null;
+                            BufferedReader br = null;
+
+                            try {
+                                fr = new FileReader(source);
+                                br = new BufferedReader(fr);
+                                String currentLine="";
+
+                                while ((currentLine = br.readLine()) != null) {
+                                    content += currentLine + " , ";
+                                }
+                            } catch (IOException e) {e.printStackTrace();}
+                            finally
+                            {
+                                try
+                                {
+                                    if(br != null)
+                                        br.close();
+                                    if(fr != null)
+                                        fr.close();
+                                }catch (IOException e) {e.printStackTrace();}
+                            }
+
+                            return content;
+                        }
+                        else
+                            return "Plik nie istnieje";
+                    }
+                }
+                return "Nie znaleziono ID";
+            }
+            else
+                return "Niepoprawne parametry";
+        }
+        else
+            return "Niepoprawne parametry";
+    }
 }
