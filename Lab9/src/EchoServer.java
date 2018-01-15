@@ -1,3 +1,5 @@
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
+
 import java.io.*;
 import java.net.*;
 import java.nio.file.Files;
@@ -102,18 +104,27 @@ public class EchoServer {
                 String line;
 
                 while ((line = br.readLine()) != null) {
-                    if(line.equals(login + "/" + pass))
+                    Pattern pt = Pattern.compile("(.*)/(.*)");
+                    Matcher mc = pt.matcher(line);
+                    if(mc.find())
                     {
-                        for(UserInfo ui : UI)
+                        if(line.equals(login + "/" + pass))
                         {
-                            if(ui.login.equals(login))
-                                return "Uzytkownik juz zalogowany";
-                        }
+                            for(UserInfo ui : UI)
+                            {
+                                if(ui.login.equals(login))
+                                    return "Uzytkownik juz zalogowany";
+                            }
 
-                        Random r = new Random();
-                        int id = r.nextInt((99999-10000)+1)+10000;
-                        UI.add(new UserInfo(id,login));
-                        return ("ID="+String.valueOf(id));
+                            Random r = new Random();
+                            int id = r.nextInt((99999-10000)+1)+10000;
+                            UI.add(new UserInfo(id,login));
+                            return ("ID="+String.valueOf(id));
+                        }
+                        else if(mc.group(1).equals(login))
+                        {
+                            return ("Błędne hasło, odleglosc lavenshteina: " + String.valueOf(lvs(mc.group(2),pass)));
+                        }
                     }
                 }
             } catch(IOException e) {e.printStackTrace();}
@@ -244,5 +255,38 @@ public class EchoServer {
         }
         else
             return "Niepoprawne parametry";
+    }
+
+    public static int lvs(String s, String t)
+    {
+        int i, j, m, n, cost;
+        int d[][];
+
+        m = s.length();
+        n = t.length();
+
+        d = new int[m+1][n+1];
+
+        for (i=0; i<=m; i++)
+            d[i][0] = i;
+        for (j=1; j<=n; j++)
+            d[0][j] = j;
+
+        for (i=1; i<=m; i++)
+        {
+            for (j=1; j<=n; j++)
+            {
+                if (s.charAt(i-1) == t.charAt(j-1))
+                    cost = 0;
+                else
+                    cost = 1;
+
+                d[i][j] = Math.min(d[i-1][j] + 1,         /* remove */
+                        Math.min(d[i][j-1] + 1,      /* insert */
+                                d[i-1][j-1] + cost));   /* change */
+            }
+        }
+
+        return d[m][n];
     }
 }
