@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Lab10.iml" filepath="$PROJECT_DIR$/.idea/modules/Lab10.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Lab10_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Lab10_main.iml" group="Lab10" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Lab10_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Lab10_test.iml" group="Lab10" />
       <module fileurl="file://$PROJECT_DIR$/maxheap.iml" filepath="$PROJECT_DIR$/maxheap.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/maxheap_main.iml" filepath="$PROJECT_DIR$/.idea/modules/maxheap_main.iml" group="maxheap" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/maxheap_test.iml" filepath="$PROJECT_DIR$/.idea/modules/maxheap_test.iml" group="maxheap" />

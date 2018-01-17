@@ -4,6 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class HeapTest {
 	
 	@Test
@@ -60,5 +63,54 @@ public class HeapTest {
 		heap.insert(12);
 		assertEquals(45,heap.extractMax(),0.01);
 	}
+
+	@Test
+	public void heapifyHeapWithManyElements()
+	{
+		Heap heap = new Heap();
+		heap.insert(20);
+		heap.insert(300);
+		heap.insert(45);
+		heap.insert(9);
+		heap.HeapifyMax();
+		assertEquals(300,heap.extractMax(),0.01);
+	}
+
+	@Test
+	public void deleteMaxElementFromHeap()
+	{
+		Heap heap = new Heap();
+		heap.insert(400);
+		heap.insert(24);
+		heap.insert(7);
+		heap.insert(890);
+		heap.insert(234);
+		heap.deleteMax();
+		assertEquals(400,heap.extractMax(),0.01);
+	}
+
+	@Test
+	public void replaceMaxElementWithBrandNewElement()
+	{
+		Heap heap = new Heap();
+		heap.insert(345);
+		heap.insert(12);
+		heap.insert(90);
+		heap.insert(45);
+		heap.insert(900);
+		heap.replace(67);
+		assertEquals(345,heap.extractMax(),0.01);
+
+	}
+
+	@Test
+	public void createHeapFromArrayList()
+	{
+		Heap heap = new Heap();
+		ArrayList<Double> ll = new ArrayList<Double>(Arrays.asList((double)7,(double)343,(double)12));
+		heap.heapify(ll);
+		assertEquals(343,heap.extractMax(),0.01);
+	}
+
 
 }
