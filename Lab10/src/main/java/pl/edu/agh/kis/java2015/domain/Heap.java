@@ -54,22 +54,60 @@ public class Heap {
 
 	public void deleteMax()
 	{
-
+		swapElements(size()-1,0);
+		tab.remove(size()-1);
+		heapSize--;
+		HeapifyMax();
 	}
 
-	public void Heapify()
+	public void HeapifyMax()
 	{
 		for(int i = 0; i < size();i++)
 		{
 			int left =  2 * i + 1;
 			int right = 2 * i + 2;
-			int parent = (i-1)/2;
+			int max = i;
 
-			if(tab.get(i)==0)
+			if(left < size() && tab.get(left) > tab.get(max))
+				max = left;
+			if(right < size() && tab.get(right) > tab.get(max))
+				max = right;
+			if(max != i)
 			{
-
+				Double temp = tab.get(i);
+				tab.set(i,tab.get(max));
+				tab.set(max,temp);
 			}
 		}
+	}
+
+	public void replace(double value)
+	{
+		if(size() > 0)
+		{
+			this.deleteMax();
+			this.insert(value);
+		}
+		else
+		{
+			this.insert(value);
+		}
+	}
+
+	public void heapify(ArrayList<Double> list)
+	{
+		tab.addAll(list);
+		this.heapSize = list.size();
+		HeapifyMax();
+	}
+
+	public void PrintHeap()
+	{
+		for(Double n : tab)
+		{
+			System.out.println(n);
+		}
+		System.out.println("");
 	}
 
 }
